@@ -7,21 +7,28 @@
  * you to write styled confirmation boxes
  * that events can be attached to.
  * 
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * any later version.
+ * This program is free software: you can
+ * redistribute it and/or modify it under
+ * the terms of the GNU General Public
+ * License as published by the Free Software
+ * Foundation, either version 3 of the
+ * License, or any later version.
  * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * This program is distributed in the hope
+ * that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty
+ * of MERCHANTABILITY or FITNESS FOR A
+ * PARTICULAR PURPOSE.  See the GNU General
+ * Public License for more details.
  * 
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/gpl-3.0.txt>.
+ * You should have received a copy of the GNU
+ * General Public License along with this
+ * program.  If not, see
+ * <http://www.gnu.org/licenses/gpl-3.0.txt>.
  * 
  * @author Simon Emms <simon@simonemms.com>
  * @licence GNU GPLv3 <http://www.gnu.org/licenses/gpl-3.0.txt>
+ * @version 1.0
  */
 (function(jQuery) {
 
@@ -35,7 +42,8 @@
             confirmTrigger: '%confirmTrigger%',
             message: '%message%',
             title: '%title%',
-            wrapperId: '%wrapperId%'
+            wrapperId: '%wrapperId%',
+            outerWrapperId: '%outerWrapperId%'
         },
         
         getDefaultTemplate: function() {
@@ -43,8 +51,8 @@
             var objConfig = objMethods.getConfig;
             
             /* Create the template */
-            var html = '<div id="'+objConfig.wrapperId+'" class="jconfirm_wrapper">';
-            html += '<div class="jconfirm_inner">';
+            var html = '<div id="'+objConfig.outerWrapperId+'" class="jconfirm_wrapper">';
+            html += '<div id="'+objConfig.wrapperId+'" class="jconfirm_inner">';
             html += '<a href="#" class="jconfirm_close">&times;</a>'
 
             /* Title */
@@ -74,7 +82,6 @@
         },
 
         init: function( objConfig, callback ) {
-            
             
             /* Config for height/width/margins */
             var width = jQuery(window).width() / 2;
@@ -126,7 +133,7 @@
             
             /** Fail events - just close */
             jQuery('#'+objConfig.cancelTrigger).click(function() {
-                jQuery('#'+objConfig.wrapperId).remove();
+                jQuery('#'+objConfig.outerWrapperId).remove();
                 return false;
             });
             
@@ -134,6 +141,18 @@
                 jQuery('#'+objConfig.cancelTrigger).trigger('click');
                 return false;
             });
+            
+            /* Do we close on outer wrapper click? */
+            if(objConfig.closeOnOuterWrapperClick) {
+                jQuery('#'+objConfig.outerWrapperId).click(function() {
+                    jQuery('#'+objConfig.outerWrapperId).remove();
+                    return false;
+                });
+                
+                jQuery('#'+objConfig.wrapperId).click(function() {
+                    return false;
+                });
+            }
             
             /** Success events - return the callback */
             jQuery('#'+objConfig.confirmTrigger).click(function() {
@@ -172,21 +191,28 @@
     
         /* Default values */
         var objConfig = jQuery.extend({
-            title: 'Are you sure?', /* The question you are asking */
-            message: null, /* The message, if further explanation is needed */
-            confirm: 'OK', /* Confirmation message - may be 'OK', 'Yes', or 'Fo shizzle' */
             cancel: 'Cancel', /* Cancel message - too afraid to carry on */
+            cancelTrigger: 'jconfirmCancelTrigger', /* ID of cancel trigger */
+            confirm: 'OK', /* Confirmation message - may be 'OK', 'Yes', or 'Fo shizzle' */
+            confirmTrigger: 'jconfirmConfirmTrigger', /* ID of confirmation trigger */
+            closeOnOuterWrapperClick: false, /* Run cancel event if click outside the box */
             maxWidth: 500, /* Max width of box */
+            message: null, /* The message, if further explanation is needed */
+            outerWrapperId: 'jconfirmOuter', /* ID of outer wrapper - for making a background colour */
             template: null, /* The template */
-            confirmTrigger: 'jconfirmConfirmTrigger',
-            cancelTrigger: 'jconfirmCancelTrigger',
-            wrapperId: 'jconfirmWrapper'
+            title: 'Are you sure?', /* The question you are asking */
+            wrapperId: 'jconfirmWrapper' /* ID of wrapper */
         }, options);
         
         /* What method are we running? */
         if( typeof options === 'function' ) {
+            /* Use default options */
             callback = options;
+        } else if ( options === 'getConfig' ) {
+            /* Get the config options for the string replace */
+            return objMethods.getConfig;
         } else if ( (typeof options === 'object' && typeof callback === 'function' ) === false ) {
+            /* Error */
             jQuery.error( 'jConfirm incorrectly initialized.  Please check the documentation' );
         }
         
