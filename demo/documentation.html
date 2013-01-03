@@ -14,7 +14,7 @@
         <title>jConfirm :: A jQuery plugin to make pretty confirmation boxes</title>
     </head>
     
-    <body data-spy="scroll" data-target="#sidenav">
+    <body data-target=".bs-docs-sidebar" data-spy="scroll">
         
         <div class="container-narrow">
 
@@ -32,74 +32,24 @@
             
             <div class="row-fluid">
                 
-                <div class="span3">
-                    <ul id="sidenav" class="nav nav-list affix">
-                        <li class="active">
-                            <a href="#test1">
-                                test1
-                                <i class="icon-chevron-right"></i>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#test2">
-                                test2
-                                <i class="icon-chevron-right"></i>
-                            </a>
+                <div class="span3 bs-docs-sidebar">
+                    <ul class="nav nav-list affix bs-docs-sidenav">
+                        <li class="active"><a href="#section1">
+                            test1
+                            <i class="icon-chevron-right"></i></a>
                         </li>
                     </ul>
                 </div>
                 
                 <div class="span9">
                     
-                    <section id="test1">
+                    <section id="sectionId">
                         <div class="page-header">
-                            <h1>test1</h1>
+                            <h1>Section Title</h1>
                         </div>
 
                         <p>
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse sem justo, congue sed sagittis vehicula, porttitor id metus. Integer ut lorem suscipit leo pulvinar viverra eget tristique dolor. Pellentesque felis eros, tempus rhoncus pharetra ac, tristique semper nisl. Vestibulum et elit ac elit adipiscing imperdiet. Nulla tortor nisi, tempus id sollicitudin non, gravida at leo. Nulla enim erat, auctor sed tincidunt eu, lobortis eget elit. Sed malesuada condimentum rhoncus. In non nisi sed arcu porta lacinia.
-                        </p>
-
-                        <p>
-                            Cras gravida viverra sem in commodo. Aenean at elementum lacus. Nulla facilisi. Donec rutrum dapibus odio quis consequat. Aliquam eu dolor ac tellus tempus dignissim. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Praesent ac ipsum diam, at cursus erat.
-                        </p>
-
-                        <p>
-                            Sed auctor hendrerit sapien at pulvinar. Donec eleifend quam nec dolor ornare tristique. Sed ornare magna eget sem interdum vehicula. Pellentesque sem elit, vestibulum vel bibendum non, faucibus sit amet nisl. Aliquam erat volutpat. Pellentesque laoreet purus vel dui porttitor luctus. Donec volutpat viverra mauris, vel volutpat metus pretium nec. Nam dictum, quam porttitor hendrerit tempus, risus quam tincidunt libero, et laoreet arcu quam ac tellus. Integer aliquam nisi a nibh tincidunt ac luctus ligula faucibus. Vestibulum pellentesque sagittis rhoncus. Fusce id porta massa. Donec quis nunc tellus.
-                        </p>
-
-                        <p>
-                            Aenean orci velit, dapibus in consequat eget, faucibus ac est. In ante nisl, adipiscing eu viverra elementum, feugiat ut elit. Duis at elit at urna porttitor scelerisque. Maecenas suscipit odio quis lectus condimentum volutpat. Sed nunc dolor, rhoncus ut lacinia nec, pharetra at neque. Donec sollicitudin orci ac leo luctus sed rhoncus quam faucibus. Donec condimentum interdum risus et pharetra. Maecenas porttitor dapibus luctus. Phasellus nec nulla quis turpis hendrerit sollicitudin. Aliquam posuere nisl ut sem porttitor elementum. Maecenas magna odio, porttitor egestas cursus tristique, gravida eget sem.
-                        </p>
-
-                        <p>
-                            In eu dolor quis diam luctus eleifend. Pellentesque sit amet justo nec est facilisis consectetur et eu metus. Aenean porttitor libero et sapien rutrum sollicitudin. Sed luctus pulvinar metus at volutpat. Praesent imperdiet urna eget sapien dapibus aliquam. In lectus sapien, vestibulum et convallis ac, vulputate at erat. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Proin augue ante, cursus auctor luctus eu, pulvinar quis mauris. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Suspendisse non arcu vitae sem vulputate convallis eu in diam. 
-                        </p>
-                    </section>
-                    
-                    <section id="test2">
-                        <div class="page-header">
-                            <h1>test2</h1>
-                        </div>
-
-                        <p>
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse sem justo, congue sed sagittis vehicula, porttitor id metus. Integer ut lorem suscipit leo pulvinar viverra eget tristique dolor. Pellentesque felis eros, tempus rhoncus pharetra ac, tristique semper nisl. Vestibulum et elit ac elit adipiscing imperdiet. Nulla tortor nisi, tempus id sollicitudin non, gravida at leo. Nulla enim erat, auctor sed tincidunt eu, lobortis eget elit. Sed malesuada condimentum rhoncus. In non nisi sed arcu porta lacinia.
-                        </p>
-
-                        <p>
-                            Cras gravida viverra sem in commodo. Aenean at elementum lacus. Nulla facilisi. Donec rutrum dapibus odio quis consequat. Aliquam eu dolor ac tellus tempus dignissim. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Praesent ac ipsum diam, at cursus erat.
-                        </p>
-
-                        <p>
-                            Sed auctor hendrerit sapien at pulvinar. Donec eleifend quam nec dolor ornare tristique. Sed ornare magna eget sem interdum vehicula. Pellentesque sem elit, vestibulum vel bibendum non, faucibus sit amet nisl. Aliquam erat volutpat. Pellentesque laoreet purus vel dui porttitor luctus. Donec volutpat viverra mauris, vel volutpat metus pretium nec. Nam dictum, quam porttitor hendrerit tempus, risus quam tincidunt libero, et laoreet arcu quam ac tellus. Integer aliquam nisi a nibh tincidunt ac luctus ligula faucibus. Vestibulum pellentesque sagittis rhoncus. Fusce id porta massa. Donec quis nunc tellus.
-                        </p>
-
-                        <p>
-                            Aenean orci velit, dapibus in consequat eget, faucibus ac est. In ante nisl, adipiscing eu viverra elementum, feugiat ut elit. Duis at elit at urna porttitor scelerisque. Maecenas suscipit odio quis lectus condimentum volutpat. Sed nunc dolor, rhoncus ut lacinia nec, pharetra at neque. Donec sollicitudin orci ac leo luctus sed rhoncus quam faucibus. Donec condimentum interdum risus et pharetra. Maecenas porttitor dapibus luctus. Phasellus nec nulla quis turpis hendrerit sollicitudin. Aliquam posuere nisl ut sem porttitor elementum. Maecenas magna odio, porttitor egestas cursus tristique, gravida eget sem.
-                        </p>
-
-                        <p>
-                            In eu dolor quis diam luctus eleifend. Pellentesque sit amet justo nec est facilisis consectetur et eu metus. Aenean porttitor libero et sapien rutrum sollicitudin. Sed luctus pulvinar metus at volutpat. Praesent imperdiet urna eget sapien dapibus aliquam. In lectus sapien, vestibulum et convallis ac, vulputate at erat. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Proin augue ante, cursus auctor luctus eu, pulvinar quis mauris. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Suspendisse non arcu vitae sem vulputate convallis eu in diam. 
+                            Text
                         </p>
                     </section>
                     
