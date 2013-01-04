@@ -76,7 +76,25 @@ function attachBase() {
     
     $('#example1').click(function() {
         $.jconfirm(function() {
-            alert('The callback.');
+            alert('That was example 1');
+            return false;
+        });
+        return false;
+    });
+    
+    
+    
+    
+    
+    $('#example2').click(function() {
+        $.jconfirm({
+            title: 'We can add a question here',
+            message: 'If it requires some explanation, we can add\n\
+                further information here',
+            confirm: 'Success',
+            cancel: 'Fail'
+        },function() {
+            alert('That was example 2');
             return false;
         });
         return false;
