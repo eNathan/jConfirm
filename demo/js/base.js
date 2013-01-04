@@ -17,6 +17,13 @@ function attachBase() {
     
     
     
+    refreshSideNavWidth();
+    $(window).resize(function() {
+        refreshSideNavWidth();
+    });
+    
+    
+    
     
     $('#jConfirm_demo').click(function() {
         
@@ -103,4 +110,12 @@ function attachBase() {
     
     
     
+}
+
+
+function refreshSideNavWidth() {
+    $('.bs-docs-sidenav.affix').each(function() {
+        var width = $(this).parents('.bs-docs-sidebar').width();
+        $(this).css('width', width);
+    });
 }
