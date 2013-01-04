@@ -17,6 +17,13 @@ function attachBase() {
     
     
     
+    refreshSideNavWidth();
+    $(window).resize(function() {
+        refreshSideNavWidth();
+    });
+    
+    
+    
     
     $('#jConfirm_demo').click(function() {
         
@@ -76,7 +83,7 @@ function attachBase() {
     
     $('#example1').click(function() {
         $.jconfirm(function() {
-            alert('The callback.');
+            alert('That was example 1');
             return false;
         });
         return false;
@@ -85,4 +92,30 @@ function attachBase() {
     
     
     
+    
+    $('#example2').click(function() {
+        $.jconfirm({
+            title: 'We can add a question here',
+            message: 'If it requires some explanation, we can add\n\
+                further information here',
+            confirm: 'Success',
+            cancel: 'Fail'
+        },function() {
+            alert('That was example 2');
+            return false;
+        });
+        return false;
+    });
+    
+    
+    
+    
+}
+
+
+function refreshSideNavWidth() {
+    $('.bs-docs-sidenav.affix').each(function() {
+        var width = $(this).parents('.bs-docs-sidebar').width();
+        $(this).css('width', width);
+    });
 }

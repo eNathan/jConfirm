@@ -14,7 +14,7 @@
         <title>jConfirm :: A jQuery plugin to make pretty confirmation boxes</title>
     </head>
     
-    <body>
+    <body data-target=".bs-docs-sidebar" data-spy="scroll">
         
         <a href="https://github.com/riggerthegeek/jConfirm"><img style="position: absolute; top: 0; left: 0; border: 0;" src="img/forkme_left_orange_ff7600.png" alt="Fork me on GitHub"></a>
         
@@ -70,27 +70,72 @@
                     <hr />
 
                     <div class="row-fluid marketing">
-                        <div class="span12">
-                            <h4><span class="label label-important">Important:</span> Include jQuery and jConfirm in &lt;head&gt;</h4>
-                            <pre class="prettyprint linenums"><ol class="linenums"><li><span class="tag">&lt;script type=&quot;text/javascript&quot; src=&quot;/path/to/jquery-1.8.3.min.js&quot;&gt;&lt;script&gt;</span></li><li><span class="tag">&lt;script type=&quot;text/javascript&quot; src=&quot;/path/to/jquery.jconfirm-1.0.min.js&quot;&gt;&lt;script&gt;</span></li></ol></pre>
-                        </div>
-                    </div>
 
-                    <div class="row-fluid marketing">
-                        <div class="span12">
-                            <h4><span class="label label-success">Example 1:</span> Default output</h4>
-                            <p class="text-center">
-                                <a href="#" id="example1" class="btn btn-large btn-info btn-example">
-                                    Example 1
-                                </a>
-                            </p>
-                            <p>
-                                This runs all the default functionality. The
-                            </p>
-                            <h5>JS</h5>
-                            <pre class="prettyprint linenums pre-scrollable"><ol class="linenums"><li><span class="tag">$('#example1').click(function() {</span></li><li><span class="tag">    $.jconfirm(function() {</span></li><li><span class="tag">        alert('The callback.');</span></li><li><span class="tag">        return false;</span></li><li><span class="tag">    });</span></li><li><span class="tag">    return false;</span></li><li><span class="tag">});</span></li></ol></pre>
-                            <h5>HTML in popup</h5>
-                            <pre class="prettyprint linenums pre-scrollable"><ol class="linenums"><li><span class="tag"></span></li></ol></pre>
+                        <div class="span3 bs-docs-sidebar">
+                            <ul class="nav nav-list affix bs-docs-sidenav">
+                                <li class="active"><a href="#section1">
+                                    Setup
+                                    <i class="icon-chevron-right"></i></a>
+                                </li>
+                                <li><a href="#section2">
+                                    Default Output
+                                    <i class="icon-chevron-right"></i></a>
+                                </li>
+                                <li><a href="#section3">
+                                    Customised Text Data
+                                    <i class="icon-chevron-right"></i></a>
+                                </li>
+                            </ul>
+                        </div>
+                        
+                        <div class="span9">
+                            <section id="section1" class="marketing" style="margin-top: 0;">
+                                <h4><span class="label label-important">Important:</span> Include jQuery and jConfirm in &lt;head&gt;</h4>
+                                <pre class="prettyprint linenums"><ol class="linenums"><li><span class="tag">&lt;script type=&quot;text/javascript&quot; src=&quot;/path/to/jquery-1.8.3.min.js&quot;&gt;&lt;script&gt;</span></li><li><span class="tag">&lt;script type=&quot;text/javascript&quot; src=&quot;/path/to/jquery.jconfirm-1.0.min.js&quot;&gt;&lt;script&gt;</span></li></ol></pre>
+                            </section>
+                            
+                            <hr />
+                            
+                            <section id="section2" class="marketing">
+                                <h4><span class="label label-success">Example 1:</span> Default Output</h4>
+                                <p class="text-center">
+                                    <button id="example1" class="btn btn-large btn-info btn-example">
+                                        Example 1
+                                    </button>
+                                </p>
+                                <p>
+                                    This is the simplest form of jConfirm, just running
+                                    it with the default variables.  This will work
+                                    for most instances.
+                                </p>
+                                <h5>JS</h5>
+                                <pre class="prettyprint linenums pre-scrollable"><ol class="linenums"><li><span class="tag">$('#example1').click(function() {</span></li><li><span class="tag">    $.jconfirm(function() {</span></li><li><span class="tag">        // Put your own callback in here and return false to stop any link running</span></li><li><span class="tag">        return false;</span></li><li><span class="tag">    });</span></li><li><span class="tag">    return false;</span></li><li><span class="tag">});</span></li></ol></pre>
+
+                                <h5>HTML in popup</h5>
+                                <pre class="prettyprint linenums pre-scrollable"><ol class="linenums"><li><span class="tag">&lt;div class=&quot;jconfirm_wrapper&quot; id=&quot;jconfirmOuter&quot;&gt;</span></li><li><span class="tag">    &lt;div class=&quot;jconfirm_inner&quot; id=&quot;jconfirmWrapper_1357318603612&quot; style=&quot;position: absolute; top: 50%; left: 50%; margin-left: -250px; margin-top: -124px; width: 500px; height: 124px;&quot;&gt;</span></li><li><span class="tag">        &lt;a class=&quot;jconfirm_close&quot; href=&quot;#&quot;&gt;&amp;times;&lt;/a&gt;</span></li><li><span class="tag">        &lt;h4 class=&quot;jconfirm_title&quot;&gt;Are you sure?&lt;/h4&gt;</span></li><li><span class="tag">        &lt;div class=&quot;jconfirm_message&quot;&gt;&lt;/div&gt;</span></li><li><span class="tag">        &lt;div class=&quot;jconfirm_buttons&quot;&gt;</span></li><li><span class="tag">            &lt;a class=&quot;jconfirm_success&quot; id=&quot;jconfirmConfirmTrigger_1357318603612&quot; href=&quot;#&quot;&gt;OK&lt;/a&gt;</span></li><li><span class="tag">            &lt;a class=&quot;jconfirm_fail&quot; id=&quot;jconfirmCancelTrigger_1357318603612&quot; href=&quot;#&quot;&gt;Cancel&lt;/a&gt;</span></li><li><span class="tag">        &lt;/div&gt;</span></li><li><span class="tag">    &lt;/div&gt;</span></li><li><span class="tag">&lt;/div&gt;</span></li></ol></pre>
+
+                                <p>
+                                    <strong>NB.</strong> The timestamp of the script
+                                    execution time is added to some of the ID tags.
+                                </p>
+                            </section>
+                            
+                            <hr />
+                            
+                            <section id="section3" class="marketing">
+                                <h4><span class="label label-success">Example 2:</span> Customised Text Data</h4>
+                                <p class="text-center">
+                                    <button id="example2" class="btn btn-large btn-info btn-example">
+                                        Example 2
+                                    </button>
+                                </p>
+                                <p>
+                                </p>
+                                <h5>JS</h5>
+                                <pre class="prettyprint linenums pre-scrollable"><ol class="linenums"><li><span class="tag"></span></li></ol></pre>
+                                <h5>HTML in popup</h5>
+                                <pre class="prettyprint linenums pre-scrollable"><ol class="linenums"><li><span class="tag"></span></li></ol></pre>
+                            </section>
                         </div>
                     </div>
 
@@ -98,7 +143,7 @@
 
                     <div class="row-fluid marketing">
                         <div class="span12">
-                            <h4><span class="label label-success">Example 1:</span> Default output</h4>
+                            <h4><span class="label label-success">Example 1:</span> Default Output</h4>
                             <p class="text-center">
                                 <a href="#" id="example1" class="btn btn-large btn-info btn-example">
                                     Example 1
@@ -124,7 +169,7 @@
             <div class="row-fluid">
                 <div class="span12">
                     <div class="row-fluid">
-                        <div class="span6 offset3">
+                        <div class="span8 offset2">
                             <div>
                                 <p class="pull-left">Released under <a href="http://www.gnu.org/licenses/gpl.html" target="_blank">GNU GPLv3 licence</a></p>
                                 <p class="pull-right">&copy; <a href="http://simonemms.com">Simon Emms</a> 2013</p>
