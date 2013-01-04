@@ -54,7 +54,7 @@ a {
     right: 0;
     bottom: 0;
     background: rgba(0, 0, 0, 0.4);
-    		filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#102000000, endColorstr=#102000000);
+    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#102000000, endColorstr=#102000000);
 }
 
 .jconfirm_inner {
@@ -123,4 +123,38 @@ a {
 .bs-docs-sidenav .active .icon-chevron-right, .bs-docs-sidenav .active a:hover .icon-chevron-right {
     background-image: url("../img/glyphicons-halflings-white.png");
     opacity: 1;
+}
+
+.btn-example {
+    margin: 4px 0;
+}
+
+ol.linenums li {
+    color: #bebec5;
+    line-height: 20px;
+    padding-left: 12px;
+    text-shadow: 0 1px 0 #fff;
+}
+
+ol.linenums li span {
+    color: #333;
+}
+
+.prettyprint.linenums {
+    box-shadow: 40px 0 0 #fbfbfc inset, 41px 0 0 #ececf0 inset;
+}
+
+.bs-docs-example + .prettyprint {
+    margin-top: -20px;
+    padding-top: 15px;
+}
+
+pre.prettyprint {
+    margin-bottom: 0px;
+}
+
+.prettyprint {
+    background-color: #f7f7f9;
+    border: 1px solid #e1e1e8;
+    padding: 8px;
 }

@@ -68,4 +68,16 @@ function attachBase() {
     
     
     
+    
+    $('#example1').click(function() {
+        $.jconfirm(function() {
+            alert('The callback.');
+            return false;
+        });
+        return false;
+    });
+    
+    
+    
+    
 }

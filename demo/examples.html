@@ -29,38 +29,49 @@
             </div>
 
             <hr>
-
-            <div class="jumbotron">
-                <h3>A jQuery plugin to make pretty confirmation boxes</h3>
-                <a id="jConfirm_demo" class="btn btn-large btn-info" href="#">Demo</a>
-                <a class="btn btn-large btn-success" href="examples.html">Examples</a>
-            </div>
-
-            <hr>
             
             <div class="row-fluid marketing">
-                <div class="span6">
-                    <h4>Subheading</h4>
-                    <p>Donec id elit non mi porta gravida at eget metus. Maecenas faucibus mollis interdum.</p>
-
-                    <h4>Subheading</h4>
-                    <p>Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Cras mattis consectetur purus sit amet fermentum.</p>
-
-                    <h4>Subheading</h4>
-                    <p>Maecenas sed diam eget risus varius blandit sit amet non magna.</p>
-                </div>
-                
-                <div class="span6">
-                    <h4>Subheading</h4>
-                    <p>Donec id elit non mi porta gravida at eget metus. Maecenas faucibus mollis interdum.</p>
-
-                    <h4>Subheading</h4>
-                    <p>Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Cras mattis consectetur purus sit amet fermentum.</p>
-
-                    <h4>Subheading</h4>
-                    <p>Maecenas sed diam eget risus varius blandit sit amet non magna.</p>
+                <div class="span12">
+                    <h4>Include jQuery and jConfirm in &lt;head&gt;</h4>
+                    <pre class="prettyprint linenums"><ol class="linenums"><li><span class="tag">&lt;script type=&quot;text/javascript&quot; src=&quot;/path/to/jquery-1.8.3.min.js&quot;&gt;&lt;script&gt;</span></li><li><span class="tag">&lt;script type=&quot;text/javascript&quot; src=&quot;/path/to/jquery.jconfirm-1.0.min.js&quot;&gt;&lt;script&gt;</span></li></ol></pre>
                 </div>
             </div>
+            
+            <div class="row-fluid marketing">
+                <div class="span3">
+                    <p>
+                        <a href="#" id="example1" class="btn btn-block btn-primary btn-example">
+                            Basic Example
+                        </a>
+                    </p>
+                </div>
+                
+                <div class="span9">
+                    <h4>Default output</h4>
+                    <p>This runs all the default functionality. The </p>
+                    <h5>JS</h5>
+                    <pre class="prettyprint linenums pre-scrollable"><ol class="linenums"><li><span class="tag">$('#example1').click(function() {</span></li><li><span class="tag">    $.jconfirm(function() {</span></li><li><span class="tag">        alert('The callback.');</span></li><li><span class="tag">        return false;</span></li><li><span class="tag">    });</span></li><li><span class="tag">    return false;</span></li><li><span class="tag">});</span></li></ol></pre>
+                    <h5>HTML in popup</h5>
+                    <pre class="prettyprint linenums pre-scrollable"><ol class="linenums"><li><span class="tag"></span></li></ol></pre>
+                </div>
+            </div>
+            
+            <!--
+            <div class="row-fluid marketing">
+                <div class="span3">
+                    <p>
+                        <a href="#" id="example1" class="btn btn-block btn-primary btn-example">
+                            Basic Example
+                        </a>
+                    </p>
+                </div>
+                
+                <div class="span9">
+                    <h4>Include jQuery and jConfirm in your &lt;head&gt;</h4>
+                    <pre class="prettyprint linenums pre-scrollable"><ol class="linenums"><li><span class="tag"></span></li></ol></pre>
+                </div>
+            </div>
+            -->
             
             <hr>
 
