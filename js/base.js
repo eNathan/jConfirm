@@ -7,6 +7,7 @@ $(function() {
 
 function removeBase() {
     $('#jConfirm_demo').unbind();
+    $('#example1').unbind();
 }
 
 
@@ -52,7 +53,11 @@ function attachBase() {
 
         $.jconfirm({
             title: 'Do you think this plugin is stupendous?',
-            message: 'This is an example of jConfirm. If you click "Yes" or press <Enter>, you will fire the callback. Clicking "No" or pressing <Esc> will close this box.',
+            message: 'This is an example of jConfirm. If you click "Yes" or\n\
+                press &lt;Enter&gt;, you will fire the callback. Clicking "No"\n\
+                or pressing &lt;Esc&gt; will close this box.<br /><br /><small>\n\
+                <strong>NB.</strong> This callback only fires an alert - nothing\n\
+                nasty. Promise.</small>',
             confirm: 'Yes',
             cancel: 'No',
             template: html
