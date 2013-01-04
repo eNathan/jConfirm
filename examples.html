@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        
+        <script type="text/javascript" src="js/jquery-1.8.3.min.js"></script>
+        <script type="text/javascript" src="js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="js/jquery.jconfirm-1.0.min.js"></script>
+        <script type="text/javascript" src="js/base.js"></script>
+        
+        <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+        <link href="css/style.css" rel="stylesheet" type="text/css" />
+        
+        <title>jConfirm :: A jQuery plugin to make pretty confirmation boxes</title>
+    </head>
+    
+    <body>
+        
+        <div class="container-narrow">
+
+            <div class="masthead">
+                <ul class="nav nav-pills pull-right">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="documentation.html">Documentation</a></li>
+                    <li class="active"><a href="examples.html">Examples</a></li>
+                    <li><a href="https://github.com/riggerthegeek/jConfirm/issues" target="_blank">Report Issue</a></li>
+                </ul>
+                <h3 class="muted"><a href="index.html" class="sitename">jConfirm</a></h3>
+            </div>
+
+            <hr>
+            
+            <div class="row-fluid marketing">
+                <div class="span12">
+                    <h4><span class="label label-important">Important:</span> Include jQuery and jConfirm in &lt;head&gt;</h4>
+                    <pre class="prettyprint linenums"><ol class="linenums"><li><span class="tag">&lt;script type=&quot;text/javascript&quot; src=&quot;/path/to/jquery-1.8.3.min.js&quot;&gt;&lt;script&gt;</span></li><li><span class="tag">&lt;script type=&quot;text/javascript&quot; src=&quot;/path/to/jquery.jconfirm-1.0.min.js&quot;&gt;&lt;script&gt;</span></li></ol></pre>
+                </div>
+            </div>
+            
+            <div class="row-fluid marketing">
+                <div class="span12">
+                    <h4><span class="label label-success">Example 1:</span> Default output</h4>
+                    <p class="text-center">
+                        <a href="#" id="example1" class="btn btn-large btn-info btn-example">
+                            Example 1
+                        </a>
+                    </p>
+                    <p>
+                        This runs all the default functionality. The
+                    </p>
+                    <h5>JS</h5>
+                    <pre class="prettyprint linenums pre-scrollable"><ol class="linenums"><li><span class="tag">$('#example1').click(function() {</span></li><li><span class="tag">    $.jconfirm(function() {</span></li><li><span class="tag">        alert('The callback.');</span></li><li><span class="tag">        return false;</span></li><li><span class="tag">    });</span></li><li><span class="tag">    return false;</span></li><li><span class="tag">});</span></li></ol></pre>
+                    <h5>HTML in popup</h5>
+                    <pre class="prettyprint linenums pre-scrollable"><ol class="linenums"><li><span class="tag"></span></li></ol></pre>
+                </div>
+            </div>
+            
+            <!--
+            
+            <div class="row-fluid marketing">
+                <div class="span12">
+                    <h4><span class="label label-success">Example 1:</span> Default output</h4>
+                    <p class="text-center">
+                        <a href="#" id="example1" class="btn btn-large btn-info btn-example">
+                            Example 1
+                        </a>
+                    </p>
+                    <p>
+                    </p>
+                    <h5>JS</h5>
+                    <pre class="prettyprint linenums pre-scrollable"><ol class="linenums"><li><span class="tag"></span></li></ol></pre>
+                    <h5>HTML in popup</h5>
+                    <pre class="prettyprint linenums pre-scrollable"><ol class="linenums"><li><span class="tag"></span></li></ol></pre>
+                </div>
+            </div>
+            -->
+            
+            <hr>
+
+            <div class="footer">
+                <p class="pull-right">&copy; <a href="http://simonemms.com">Simon Emms</a> 2013</p>
+            </div>
+
+          </div>
+        
+    </body>
+</html>    
