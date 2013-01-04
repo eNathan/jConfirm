@@ -5,7 +5,7 @@
         
         <script type="text/javascript" src="js/jquery-1.8.3.min.js"></script>
         <script type="text/javascript" src="js/bootstrap.min.js"></script>
-        <script type="text/javascript" src="../jquery.jconfirm-1.0.min.js"></script>
+        <script type="text/javascript" src="js/jquery.jconfirm-1.0.min.js"></script>
         <script type="text/javascript" src="js/base.js"></script>
         
         <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css" />
@@ -16,59 +16,117 @@
     
     <body>
         
-        <div class="container-narrow">
+        <a href="https://github.com/riggerthegeek/jConfirm"><img style="position: absolute; top: 0; left: 0; border: 0;" src="img/forkme_left_orange_ff7600.png" alt="Fork me on GitHub"></a>
+        
+        <div class="mainWrapper">
+        
+            <div class="row-fluid">
 
-            <div class="masthead">
-                <ul class="nav nav-pills pull-right">
-                    <li class="active"><a href="index.html">Home</a></li>
-                    <li><a href="documentation.html">Documentation</a></li>
-                    <li><a href="examples.html">Examples</a></li>
-                    <li><a href="https://github.com/riggerthegeek/jConfirm/issues" target="_blank">Report Issue</a></li>
-                </ul>
-                <h3 class="muted"><a href="index.html" class="sitename">jConfirm</a></h3>
-            </div>
+                <div class="span8 offset2 minwidth">
 
-            <hr>
+                    <div id="headerWrapper" class="masthead">
+                        <ul class="nav nav-pills pull-right">
+                            <li class="active"><a href="index.html">Home</a></li>
+                            <li><a href="documentation.html">Documentation</a></li>
+                            <li><a href="examples.html">Examples</a></li>
+                            <li><a href="https://github.com/riggerthegeek/jConfirm/issues" target="_blank">Report Issue</a></li>
+                        </ul>
 
-            <div class="jumbotron">
-                <h3>A jQuery plugin to make pretty confirmation boxes</h3>
-                <a id="jConfirm_demo" class="btn btn-large btn-info" href="#">Demo</a>
-                <a class="btn btn-large btn-success" href="examples.html">Examples</a>
-            </div>
+                        <h3 class="muted"><a href="index.html" class="sitename">jConfirm v1.0</a></h3>
 
-            <hr>
-            
-            <div class="row-fluid marketing">
-                <div class="span6">
-                    <h4>Subheading</h4>
-                    <p>Donec id elit non mi porta gravida at eget metus. Maecenas faucibus mollis interdum.</p>
+                        <div id="download-wrapper" class="btn-toolbar">
+                            <div class="btn-group">
+                                <a href="https://github.com/riggerthegeek/jConfirm/archive/master.zip" class="btn btn-small">
+                                    <div class="muted">
+                                        <small>Download</small>
+                                    </div>
+                                    <div class="bold">
+                                        <strong><small>ZIP File</small></strong>
+                                        <i class="icon-download"></i>
+                                    </div>
+                                </a>
+                                <a href="https://github.com/riggerthegeek/jConfirm/archive/master.tar.gz" class="btn btn-small">
+                                    <div class="muted">
+                                        <small>Download</small>
+                                    </div>
+                                    <div class="bold">
+                                        <strong><small>TAR Ball</small></strong>
+                                        <i class="icon-download"></i>
+                                    </div>
+                                </a>
+                                <a href="https://github.com/riggerthegeek/jConfirm" class="btn btn-small">
+                                    <div class="muted">
+                                        <small>View on</small>
+                                    </div>
+                                    <div class="bold">
+                                        <strong><small>GitHub</small></strong>
+                                        <i class="icon-eye-open"></i>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
 
-                    <h4>Subheading</h4>
-                    <p>Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Cras mattis consectetur purus sit amet fermentum.</p>
+                    <hr />
 
-                    <h4>Subheading</h4>
-                    <p>Maecenas sed diam eget risus varius blandit sit amet non magna.</p>
+                    <div class="jumbotron">
+                        <h3>A jQuery plugin to make pretty confirmation boxes</h3>
+                        <a id="jConfirm_demo" class="btn btn-large btn-info" href="#">Demo</a>
+                        <a class="btn btn-large btn-success" href="examples.html">Examples</a>
+                    </div>
+
+                    <hr />
+
+                    <div class="row-fluid marketing">
+                        <div class="span6">
+                            <h4>Simple</h4>
+                            <p>
+                                Create a basic dialogue box in just two lines of JavaScript.
+                            </p>
+                            
+                            <h4>Documented</h4>
+                            <p>
+                                The plugin is fully documented, allowing you to created
+                                your own styled confirmation boxes.
+                            </p>
+                        </div>
+
+                        <div class="span6">
+                            <h4>Customisable</h4>
+                            <p>
+                                You can use your own text and HTML template, so
+                                you never need to mess under the hood of the plugin.
+                            </p>
+                            
+                            <h4>Open &amp; Free</h4>
+                            <p>
+                                Released under the
+                                <a href="http://www.gnu.org/licenses/gpl.html" target="_blank">GNU GPLv3 licence</a>,
+                                so you can use it however you like.
+                            </p>
+                        </div>
+                    </div>
+
                 </div>
-                
-                <div class="span6">
-                    <h4>Subheading</h4>
-                    <p>Donec id elit non mi porta gravida at eget metus. Maecenas faucibus mollis interdum.</p>
 
-                    <h4>Subheading</h4>
-                    <p>Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Cras mattis consectetur purus sit amet fermentum.</p>
-
-                    <h4>Subheading</h4>
-                    <p>Maecenas sed diam eget risus varius blandit sit amet non magna.</p>
+            </div>
+        
+        </div>
+        
+        <div class="footer">
+            <div class="row-fluid">
+                <div class="span12">
+                    <div class="row-fluid">
+                        <div class="span6 offset3">
+                            <div>
+                                <p class="pull-left">Released under <a href="http://www.gnu.org/licenses/gpl.html" target="_blank">GNU GPLv3 licence</a></p>
+                                <p class="pull-right">&copy; <a href="http://simonemms.com">Simon Emms</a> 2013</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            
-            <hr>
-
-            <div class="footer">
-                <p class="pull-right">&copy; <a href="http://simonemms.com">Simon Emms</a> 2013</p>
-            </div>
-
-          </div>
+        </div>
         
     </body>
 </html>    
