@@ -116,7 +116,8 @@
             });
             
             /* Attach the events */
-            jQuery('body').keypress(function(e) {
+            jQuery('body').keydown(function(e) {
+                alert(e.keyCode)
                 if(e.keyCode == 27) {
                     /* Escape */
                     jQuery('#'+objConfig.cancelTrigger).trigger('click');
