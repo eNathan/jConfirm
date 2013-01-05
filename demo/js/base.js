@@ -96,11 +96,11 @@ function attachBase() {
     $('#example2').click(function() {
         $.jconfirm({
             title: 'We can add a question here',
-            message: 'If it requires some explanation, we can add\n\
-                further information here',
+            message: 'If it requires some explanation, we can add further\n\
+                information here',
             confirm: 'Success',
             cancel: 'Fail'
-        },function() {
+        }, function() {
             alert('That was example 2');
             return false;
         });

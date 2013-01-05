@@ -196,3 +196,7 @@ h4 .label {
     padding: 30px 0;
     text-align: center;
 }
+
+pre.pre-scrollable {
+    max-height: 200px;
+}

@@ -90,7 +90,8 @@
                         
                         <div class="span9">
                             <section id="section1" class="marketing" style="margin-top: 0;">
-                                <h4><span class="label label-important">Important:</span> Include jQuery and jConfirm in &lt;head&gt;</h4>
+                                <h4><span class="label label-important">Important:</span> Setup</h4>
+                                <p>Include jQuery and jConfirm in your <i>&lt;head&gt;</i> tag</p>
                                 <pre class="prettyprint linenums"><ol class="linenums"><li><span class="tag">&lt;script type=&quot;text/javascript&quot; src=&quot;/path/to/jquery-1.8.3.min.js&quot;&gt;&lt;script&gt;</span></li><li><span class="tag">&lt;script type=&quot;text/javascript&quot; src=&quot;/path/to/jquery.jconfirm-1.0.min.js&quot;&gt;&lt;script&gt;</span></li></ol></pre>
                             </section>
                             
@@ -130,11 +131,13 @@
                                     </button>
                                 </p>
                                 <p>
+                                    In this example, we're adding our own question,
+                                    message and button text.  
                                 </p>
                                 <h5>JS</h5>
-                                <pre class="prettyprint linenums pre-scrollable"><ol class="linenums"><li><span class="tag"></span></li></ol></pre>
+                                <pre class="prettyprint linenums pre-scrollable"><ol class="linenums"><li><span class="tag">$('#example2').click(function() {</span></li><li><span class="tag">    $.jconfirm({</span></li><li><span class="tag">        title: 'We can add a question here',</span></li><li><span class="tag">        message: 'If it requires some explanation, we can add further information here',</span></li><li><span class="tag">        confirm: 'Success',</span></li><li><span class="tag">        cancel: 'Fail'</span></li><li><span class="tag">    }, function() {</span></li><li><span class="tag">        alert('That was example 2');</span></li><li><span class="tag">        return false;</span></li><li><span class="tag">    });</span></li><li><span class="tag">    return false;</span></li><li><span class="tag">});</span></li></ol></pre>
                                 <h5>HTML in popup</h5>
-                                <pre class="prettyprint linenums pre-scrollable"><ol class="linenums"><li><span class="tag"></span></li></ol></pre>
+                                <pre class="prettyprint linenums pre-scrollable"><ol class="linenums"><li><span class="tag">&lt;div class=&quot;jconfirm_wrapper&quot; id=&quot;jconfirmOuter&quot;&gt;</span></li><li><span class="tag">    &lt;div class=&quot;jconfirm_inner&quot; id=&quot;jconfirmWrapper_1357410209496&quot; style=&quot;position: absolute; top: 50%; left: 50%; margin-left: -250px; margin-top: -124px; width: 500px; height: 124px;&quot;&gt;</span></li><li><span class="tag">        &lt;a class=&quot;jconfirm_close&quot; href=&quot;#&quot;&gt;&#x00d7;&lt;/a&gt;</span></li><li><span class="tag">        &lt;h4 class=&quot;jconfirm_title&quot;&gt;We can add a question here&lt;/h4&gt;</span></li><li><span class="tag">        &lt;div class=&quot;jconfirm_message&quot;&gt;</span></li><li><span class="tag">            If it requires some explanation, we can add further information here</span></li><li><span class="tag">        &lt;/div&gt;</span></li><li><span class="tag">        &lt;div class=&quot;jconfirm_buttons&quot;&gt;</span></li><li><span class="tag">            &lt;a class=&quot;jconfirm_success&quot; id=&quot;jconfirmConfirmTrigger_1357410209496&quot; href=&quot;#&quot;&gt;Success&lt;/a&gt;</span></li><li><span class="tag">            &lt;a class=&quot;jconfirm_fail&quot; id=&quot;jconfirmCancelTrigger_1357410209496&quot; href=&quot;#&quot;&gt;Fail&lt;/a&gt;</span></li><li><span class="tag">        &lt;/div&gt;</span></li><li><span class="tag">    &lt;/div&gt;</span></li><li><span class="tag">&lt;/div&gt;</span></li></ol></pre>
                             </section>
                         </div>
                     </div>
