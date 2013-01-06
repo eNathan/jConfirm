@@ -96,16 +96,60 @@ function attachBase() {
     $('#example2').click(function() {
         $.jconfirm({
             title: 'We can add a question here',
-            message: 'If it requires some explanation, we can add\n\
-                further information here',
+            message: 'If it requires some explanation, we can add further\n\
+                information here',
             confirm: 'Success',
             cancel: 'Fail'
-        },function() {
+        }, function() {
             alert('That was example 2');
             return false;
         });
         return false;
     });
+    
+    
+    
+    
+    
+$('#example3').click(function() {
+    var objConfig = $.jconfirm('getConfig');
+
+    /* Create the template */
+    var html = '<div id="'+objConfig.outerWrapperId+'" class="jconfirm_wrapper">';
+    html += '<div id="'+objConfig.wrapperId+'" class="jconfirm_inner">';
+    html += '<a href="#" class="jconfirm_close close">&times;</a>'
+
+    /* Title */
+    html += '<h4 class="jconfirm_title">'
+    html += objConfig.title;
+    html += '</h4>';
+
+    /* Message */
+    html += '<div class="jconfirm_message">'
+    html += objConfig.message;
+    html += '</div>';
+
+    /* Action buttons */
+    html += '<div class="jconfirm_buttons">';
+    html += '<a href="#" id="'+objConfig.confirmTrigger+'" class="jconfirm_success btn btn-info">';
+    html += objConfig.confirm;
+    html += '</a>';
+    html += '<a href="#" id="'+objConfig.cancelTrigger+'" class="jconfirm_fail btn">';
+    html += objConfig.cancel;
+    html += '</a>';
+    html += '</div>';
+
+    html += '</div>';
+    html += '</div>';
+
+    $.jconfirm({
+        template: html
+    }, function() {
+        alert('That was example 3');
+        return false;
+    });
+    return false;
+});
     
     
     

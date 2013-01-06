@@ -85,12 +85,17 @@
                                     Customised Text Data
                                     <i class="icon-chevron-right"></i></a>
                                 </li>
+                                <li><a href="#section4">
+                                    Customised HTML Template
+                                    <i class="icon-chevron-right"></i></a>
+                                </li>
                             </ul>
                         </div>
                         
                         <div class="span9">
                             <section id="section1" class="marketing" style="margin-top: 0;">
-                                <h4><span class="label label-important">Important:</span> Include jQuery and jConfirm in &lt;head&gt;</h4>
+                                <h4><span class="label label-important">Important:</span> Setup</h4>
+                                <p>Include jQuery and jConfirm in your <i>&lt;head&gt;</i> tag</p>
                                 <pre class="prettyprint linenums"><ol class="linenums"><li><span class="tag">&lt;script type=&quot;text/javascript&quot; src=&quot;/path/to/jquery-1.8.3.min.js&quot;&gt;&lt;script&gt;</span></li><li><span class="tag">&lt;script type=&quot;text/javascript&quot; src=&quot;/path/to/jquery.jconfirm-1.0.min.js&quot;&gt;&lt;script&gt;</span></li></ol></pre>
                             </section>
                             
@@ -130,34 +135,38 @@
                                     </button>
                                 </p>
                                 <p>
+                                    In this example, we're adding our own question,
+                                    message and button text.
                                 </p>
                                 <h5>JS</h5>
-                                <pre class="prettyprint linenums pre-scrollable"><ol class="linenums"><li><span class="tag"></span></li></ol></pre>
+                                <pre class="prettyprint linenums pre-scrollable"><ol class="linenums"><li><span class="tag">$('#example2').click(function() {</span></li><li><span class="tag">    $.jconfirm({</span></li><li><span class="tag">        title: 'We can add a question here',</span></li><li><span class="tag">        message: 'If it requires some explanation, we can add further information here',</span></li><li><span class="tag">        confirm: 'Success',</span></li><li><span class="tag">        cancel: 'Fail'</span></li><li><span class="tag">    }, function() {</span></li><li><span class="tag">        alert('That was example 2');</span></li><li><span class="tag">        return false;</span></li><li><span class="tag">    });</span></li><li><span class="tag">    return false;</span></li><li><span class="tag">});</span></li></ol></pre>
                                 <h5>HTML in popup</h5>
-                                <pre class="prettyprint linenums pre-scrollable"><ol class="linenums"><li><span class="tag"></span></li></ol></pre>
+                                <pre class="prettyprint linenums pre-scrollable"><ol class="linenums"><li><span class="tag">&lt;div class=&quot;jconfirm_wrapper&quot; id=&quot;jconfirmOuter&quot;&gt;</span></li><li><span class="tag">    &lt;div class=&quot;jconfirm_inner&quot; id=&quot;jconfirmWrapper_1357410209496&quot; style=&quot;position: absolute; top: 50%; left: 50%; margin-left: -250px; margin-top: -124px; width: 500px; height: 124px;&quot;&gt;</span></li><li><span class="tag">        &lt;a class=&quot;jconfirm_close&quot; href=&quot;#&quot;&gt;&#x00d7;&lt;/a&gt;</span></li><li><span class="tag">        &lt;h4 class=&quot;jconfirm_title&quot;&gt;We can add a question here&lt;/h4&gt;</span></li><li><span class="tag">        &lt;div class=&quot;jconfirm_message&quot;&gt;</span></li><li><span class="tag">            If it requires some explanation, we can add further information here</span></li><li><span class="tag">        &lt;/div&gt;</span></li><li><span class="tag">        &lt;div class=&quot;jconfirm_buttons&quot;&gt;</span></li><li><span class="tag">            &lt;a class=&quot;jconfirm_success&quot; id=&quot;jconfirmConfirmTrigger_1357410209496&quot; href=&quot;#&quot;&gt;Success&lt;/a&gt;</span></li><li><span class="tag">            &lt;a class=&quot;jconfirm_fail&quot; id=&quot;jconfirmCancelTrigger_1357410209496&quot; href=&quot;#&quot;&gt;Fail&lt;/a&gt;</span></li><li><span class="tag">        &lt;/div&gt;</span></li><li><span class="tag">    &lt;/div&gt;</span></li><li><span class="tag">&lt;/div&gt;</span></li></ol></pre>
+                            </section>
+                            
+                            <hr />
+                            
+                            <section id="section4" class="marketing">
+                                <h4><span class="label label-success">Example 3:</span> Customised HTML Template</h4>
+                                <p class="text-center">
+                                    <button id="example3" class="btn btn-large btn-info btn-example">
+                                        Example 3
+                                    </button>
+                                </p>
+                                <p>
+                                    In this example, we're using the default text, but
+                                    our HTML template to work with Twitter Bootstrap.
+                                    When outputting the template, it performs a string
+                                    replace on the template to put in the variables
+                                    we set - use getConfig to get the variables.
+                                </p>
+                                <h5>JS</h5>
+                                <pre class="prettyprint linenums pre-scrollable"><ol class="linenums"><li><span class="tag">$('#example3').click(function() {</span></li><li><span class="tag">    var objConfig = $.jconfirm('getConfig');</span></li><li><span class="tag"></span></li><li><span class="tag">    /* Create the template */</span></li><li><span class="tag">    var html = '&lt;div id=&quot;'+objConfig.outerWrapperId+'&quot; class=&quot;jconfirm_wrapper&quot;&gt;';</span></li><li><span class="tag">    html += '&lt;div id=&quot;'+objConfig.wrapperId+'&quot; class=&quot;jconfirm_inner&quot;&gt;';</span></li><li><span class="tag">    html += '&lt;a href=&quot;#&quot; class=&quot;jconfirm_close close&quot;&gt;&amp;times;&lt;/a&gt;'</span></li><li><span class="tag"></span></li><li><span class="tag">/* Title */</span></li><li><span class="tag">    html += '&lt;h4 class=&quot;jconfirm_title&quot;&gt;'</span></li><li><span class="tag">    html += objConfig.title;</span></li><li><span class="tag">    html += '&lt;/h4&gt;';</span></li><li><span class="tag"></span></li><li><span class="tag">    /* Message */</span></li><li><span class="tag">    html += '&lt;div class=&quot;jconfirm_message&quot;&gt;'</span></li><li><span class="tag">    html += objConfig.message;</span></li><li><span class="tag">    html += '&lt;/div&gt;';</span></li><li><span class="tag"></span></li><li><span class="tag">    /* Action buttons */</span></li><li><span class="tag">    html += '&lt;div class=&quot;jconfirm_buttons&quot;&gt;';</span></li><li><span class="tag">    html += '&lt;a href=&quot;#&quot; id=&quot;'+objConfig.confirmTrigger+'&quot; class=&quot;jconfirm_success btn btn-info&quot;&gt;';</span></li><li><span class="tag">    html += objConfig.confirm;</span></li><li><span class="tag">    html += '&lt;/a&gt;';</span></li><li><span class="tag">    html += '&lt;a href=&quot;#&quot; id=&quot;'+objConfig.cancelTrigger+'&quot; class=&quot;jconfirm_fail btn&quot;&gt;';</span></li><li><span class="tag">    html += objConfig.cancel;</span></li><li><span class="tag">    html += '&lt;/a&gt;';</span></li><li><span class="tag">    html += '&lt;/div&gt;';</span></li><li><span class="tag"></span></li><li><span class="tag">    html += '&lt;/div&gt;';</span></li><li><span class="tag">    html += '&lt;/div&gt;';</span></li><li><span class="tag"></span></li><li><span class="tag">    $.jconfirm({</span></li><li><span class="tag">        template: html</span></li><li><span class="tag">    }, function() {</span></li><li><span class="tag">        alert('That was example 3');</span></li><li><span class="tag">        return false;</span></li><li><span class="tag">    });</span></li><li><span class="tag">    return false;</span></li><li><span class="tag">});</span></li></ol></pre>
+                                <h5>HTML in popup</h5>
+                                <pre class="prettyprint linenums pre-scrollable"><ol class="linenums"><li><span class="tag">&lt;div class=&quot;jconfirm_wrapper&quot; id=&quot;jconfirmOuter&quot;&gt;</span></li><li><span class="tag">    &lt;div class=&quot;jconfirm_inner&quot; id=&quot;jconfirmWrapper_1357490823508&quot; style=&quot;position: absolute; top: 50%; left: 50%; margin-left: -250px; margin-top: -114px; width: 500px; height: 114px;&quot;&gt;</span></li><li><span class="tag">        &lt;a class=&quot;jconfirm_close close&quot; href=&quot;#&quot;&gt;&times;&lt;/a&gt;</span></li><li><span class="tag">            &lt;h4 class=&quot;jconfirm_title&quot;&gt;Are you sure?&lt;/h4&gt;</span></li><li><span class="tag">            &lt;div class=&quot;jconfirm_message&quot;&gt;&lt;/div&gt;</span></li><li><span class="tag">            &lt;div class=&quot;jconfirm_buttons&quot;&gt;</span></li><li><span class="tag">                &lt;a class=&quot;jconfirm_success btn btn-info&quot; id=&quot;jconfirmConfirmTrigger_1357490823508&quot; href=&quot;#&quot;&gt;OK&lt;/a&gt;</span></li><li><span class="tag">                &lt;a class=&quot;jconfirm_fail btn&quot; id=&quot;jconfirmCancelTrigger_1357490823508&quot; href=&quot;#&quot;&gt;Cancel&lt;/a&gt;</span></li><li><span class="tag">            &lt;/div&gt;</span></li><li><span class="tag">    &lt;/div&gt;</span></li><li><span class="tag">&lt;/div&gt;</span></li></ol></pre>
                             </section>
                         </div>
                     </div>
-
-                    <!--
-
-                    <div class="row-fluid marketing">
-                        <div class="span12">
-                            <h4><span class="label label-success">Example 1:</span> Default Output</h4>
-                            <p class="text-center">
-                                <a href="#" id="example1" class="btn btn-large btn-info btn-example">
-                                    Example 1
-                                </a>
-                            </p>
-                            <p>
-                            </p>
-                            <h5>JS</h5>
-                            <pre class="prettyprint linenums pre-scrollable"><ol class="linenums"><li><span class="tag"></span></li></ol></pre>
-                            <h5>HTML in popup</h5>
-                            <pre class="prettyprint linenums pre-scrollable"><ol class="linenums"><li><span class="tag"></span></li></ol></pre>
-                        </div>
-                    </div>
-                    -->
 
                 </div>
 
