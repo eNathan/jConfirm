@@ -53,15 +53,15 @@
             /* Create the template */
             var html = '<div id="'+objConfig.outerWrapperId+'" class="jconfirm_wrapper">';
             html += '<div id="'+objConfig.wrapperId+'" class="jconfirm_inner">';
-            html += '<a href="#" class="jconfirm_close">&times;</a>'
+            html += '<a href="#" class="jconfirm_close">&times;</a>';
 
             /* Title */
-            html += '<h4 class="jconfirm_title">'
+            html += '<h4 class="jconfirm_title">';
             html += objConfig.title;
             html += '</h4>';
 
             /* Message */
-            html += '<div class="jconfirm_message">'
+            html += '<div class="jconfirm_message">';
             html += objConfig.message;
             html += '</div>';
 
@@ -110,19 +110,18 @@
                 top: '50%',
                 left: '50%',
                 'margin-left': 0 - margin_left,
-                'margin-top': 0 - margin_top,
+                'margin-top': 0 - (margin_top / 2),
                 width: width,
                 height: height
             });
             
             /* Attach the events */
             jQuery('body').keydown(function(e) {
-                alert(e.keyCode)
-                if(e.keyCode == 27) {
+                if(e.keyCode === 27) {
                     /* Escape */
                     jQuery('#'+objConfig.cancelTrigger).trigger('click');
                     return false;
-                } else if(e.keyCode == 13) {
+                } else if(e.keyCode === 13) {
                     /* Enter */
                     jQuery('#'+objConfig.confirmTrigger).trigger('click');
                     return false;
