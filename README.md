@@ -1,134 +1,147 @@
 import kotlinx.coroutines.*
-import kotlinx.coroutines.channels.Channel
-import java.util.concurrent.atomic.AtomicReference
-import kotlin.system.*
+import kotlinx.coroutines.channels.*
+import kotlin.time.Duration.Companion.milliseconds
 
-/**
- * One instance per program.  Keeps an “active area” at the bottom of the
- * terminal that is redrawn at most every [frameMillis] ms; finished lines can
- * optionally be omitted from the scroll-back.
- *
- * Thread-safe: all state mutates inside a single-threaded actor.
- *
- * @param frameMillis minimum time (ms) between consecutive renders
- */
-class LineDisplay(private val frameMillis: Long = 50L) {     // 20 fps default
+class LineDisplay(frameMillis: Long = 50L) {          // 20 fps default
 
-    /** Where this line lives inside the active area. */
+    /* ────────────────  PUBLIC TYPES  ──────────────── */
+
     enum class Location { TOP, NATURAL, BOTTOM }
-
-    /* ─────────────────────────────  PUBLIC API  ────────────────────────── */
 
     inner class Line internal constructor() {
 
-        /** Current text for this line (set from any thread). */
         var text: String
-            get() = state.get()
+            get() = _text
             set(v) {
-                state.set(v)
-                channel.trySend(Msg.Update(this, v))
+                _text = v
+                messages.trySend(Msg.Update(this, v))
             }
 
-        /**
-         * Mark line finished.
-         *
-         * @param finalPrint if true (default) the line is printed once more and
-         *                   left in scroll-back; if false it is just dropped.
-         */
         fun complete(finalPrint: Boolean = true) {
-            channel.trySend(Msg.Complete(this, finalPrint))
+            messages.trySend(Msg.Complete(this, finalPrint))
         }
 
-        // ------------------------------------------------------------------
-        private val state = AtomicReference("")
+        // ------------------------------------------------------------
+        @Volatile private var _text: String = ""
     }
 
-    /** Create a new (initially empty) line. */
     fun add(location: Location = Location.NATURAL): Line {
         val l = Line()
-        channel.trySend(Msg.Add(l, location))
+        messages.trySend(Msg.Add(l, location))
         return l
     }
 
-    /* ───────────────────────── INTERNAL STUFF  ─────────────────────────── */
+    /* ────────────────  INTERNAL  ──────────────── */
 
+    /* Actor messages ----------------------------------------------------- */
     private sealed interface Msg {
-        data class Add(val line: Line, val loc: Location)        : Msg
-        data class Update(val line: Line, val newText: String)   : Msg
-        data class Complete(val line: Line, val finalPrint: Boolean) : Msg
+        data class Add(val line: Line, val loc: Location)            : Msg
+        data class Update(val line: Line, val text: String)          : Msg
+        data class Complete(val line: Line, val final: Boolean)      : Msg
+        data object Tick                                             : Msg
     }
 
-    private data class Internal(
-        val line: Line,
-        var text: String,
-        val loc: Location,
-        var completed: Boolean = false,
+    /* In-memory line model ---------------------------------------------- */
+    private data class Entry(
+        val line : Line,
+        var text : String,
+        val loc  : Location,
+        var done : Boolean = false,
         var finalPrint: Boolean = true
     )
 
-    private val channel = Channel<Msg>(Channel.UNLIMITED)
-    private val scope   = CoroutineScope(
-        SupervisorJob() + newSingleThreadContext("LineDisplayRender")
+    /* Channels & coroutines --------------------------------------------- */
+    private val messages = Channel<Msg>(Channel.UNLIMITED)
+
+    private val scope = CoroutineScope(
+        SupervisorJob() + newSingleThreadContext("LineDisplay")
     )
 
-    init { scope.launch { renderLoop() } }
+    init {
+        /* Periodic tick channel drives throttled renders */
+        val ticker = ticker(frameMillis.milliseconds, frameMillis.milliseconds, scope)
 
-    private suspend fun renderLoop() {
-        val active          = mutableListOf<Internal>()
-        var lastRenderAt    = 0L
-        var prevActiveCount = 0
+        scope.launch {
+            /* Relay ticker events into the actor mailbox */
+            for (unit in ticker) messages.send(Msg.Tick)
+        }
 
-        for (msg in channel) {
+        scope.launch { actorLoop() }
+    }
+
+    /* ────────────────  ACTOR LOOP  ──────────────── */
+
+    private suspend fun actorLoop() {
+        val active      = mutableListOf<Entry>()
+        var dirty       = false
+        var prevActive  = 0
+
+        for (msg in messages) {
             when (msg) {
-                is Msg.Add      -> active += Internal(msg.line, "", msg.loc)
-                is Msg.Update   -> active.find { it.line === msg.line }?.text = msg.newText
-                is Msg.Complete -> active.find { it.line === msg.line }?.apply {
-                                     completed  = true
-                                     finalPrint = msg.finalPrint
-                                   }
-            }
+                Msg.Tick -> {
+                    if (dirty) {
+                        prevActive = render(active, prevActive)
+                        dirty = false
+                    }
+                }
 
-            val now = TimeSource.Monotonic.markNow()
-            if (now.elapsedNow().inWholeMilliseconds >= frameMillis) {
-                prevActiveCount = render(active, prevActiveCount)
-                lastRenderAt    = System.nanoTime()
+                is Msg.Add -> {
+                    active += Entry(msg.line, "", msg.loc)
+                    dirty = true
+                }
+
+                is Msg.Update -> {
+                    active.find { it.line === msg.line }?.text = msg.text
+                    dirty = true
+                }
+
+                is Msg.Complete -> {
+                    active.find { it.line === msg.line }?.apply {
+                        done        = true
+                        finalPrint  = msg.final
+                    }
+                    dirty = true
+                }
             }
         }
     }
 
-    /** Performs one paint of the active area (see big comment in first impl). */
-    private fun render(list: MutableList<Internal>, before: Int): Int {
+    /* ────────────────  RENDER  ──────────────── */
 
-        val completed  = list.filter { it.completed }
-        val toScroll   = completed.filter { it.finalPrint }
-        val ongoing    = list.filterNot { it.completed }
+    private fun render(list: MutableList<Entry>, prevLines: Int): Int {
 
-        // Build draw order TOP → NATURAL → BOTTOM
-        val top     = ongoing.filter { it.loc == Location.TOP     }
-        val natural = ongoing.filter { it.loc == Location.NATURAL }
-        val bottom  = ongoing.filter { it.loc == Location.BOTTOM  }
+        /* Split lists only once */
+        val completed    = list.filter { it.done }
+        val toScroll     = completed.filter { it.finalPrint }
+        val remaining    = list.filterNot { it.done }
+
+        /* Preserve insertion order inside each bucket */
+        val top      = remaining.filter { it.loc == Location.TOP     }
+        val natural  = remaining.filter { it.loc == Location.NATURAL }
+        val bottom   = remaining.filter { it.loc == Location.BOTTOM  }
 
         val buf = StringBuilder()
 
-        /* Move to top of previous active area and clear it */
-        if (before > 0) buf.append("\u001B[").append(before).append('A')
+        /* 1 – move to top of active area and erase it */
+        if (prevLines > 0) buf.append("\u001B[").append(prevLines).append('A')
         buf.append('\r').append("\u001B[0J")
 
-        /* Newly finished lines (scroll-back) */
-        toScroll.forEach { buf.append(it.text).append('\n') }
+        /* 2 – newly completed lines (optional) */
+        for (e in toScroll) buf.append(e.text).append('\n')
 
-        /* Still-running lines */
-        fun put(group: List<Internal>) =
-            group.forEach { buf.append("\r\u001B[2K").append(it.text).append('\n') }
+        /* 3 – still-active lines                    */
+        fun emit(batch: List<Entry>) =
+            batch.forEach { buf.append("\r\u001B[2K").append(it.text).append('\n') }
 
-        put(top); put(natural); put(bottom)
+        emit(top); emit(natural); emit(bottom)
 
+        /* 4 – push to terminal in one shot */
         synchronized(System.out) {
             System.out.print(buf.toString())
             System.out.flush()
         }
 
-        /* Drop everything that’s done (printed or not) */
+        /* 5 – purge finished entries */
         list.removeAll(completed)
 
         return top.size + natural.size + bottom.size
