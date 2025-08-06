@@ -5,29 +5,55 @@ data class Column(
     val truncateRight: Boolean
 )
 
+private val ANSI_REGEX = """\u001B\[[;0-9]*m""".toRegex()
+
 /**
- * Helper function for displaying a table row.
- * Each cell is right-padded to at least minWidth,
- * and if it exceeds maxWidth it’s truncated:
- *  - by default removes characters from the left (keep rightmost)
- *  - if truncateRight==true removes from the right (keep leftmost)
+ * Strip ANSI sequences for length calculations.
  */
+private fun String.stripAnsi() = replace(ANSI_REGEX, "")
+
+/**
+ * Extract leading ANSI codes (e.g. "\u001B[32m\u001B[1m")
+ */
+private fun String.extractPrefixAnsi(): String {
+  val match = """^((?:\u001B\[[;0-9]*m)+)""".toRegex().find(this)
+  return match?.value ?: ""
+}
+
+/**
+ * Extract trailing ANSI codes (e.g. "\u001B[0m")
+ */
+private fun String.extractSuffixAnsi(): String {
+  val match = """((?:\u001B\[[;0-9]*m)+)$""".toRegex().find(this)
+  return match?.value ?: ""
+}
+
 fun row(separator: Char = '\t', vararg columns: Column): String {
-    return columns.joinToString(separator.toString()) { col ->
-        // 1) truncate if too long
-        val truncated = if (col.text.length > col.maxWidth) {
-            if (col.truncateRight) 
-                col.text.take(col.maxWidth) 
-            else 
-                col.text.takeLast(col.maxWidth)
-        } else {
-            col.text
-        }
-        // 2) pad on the right if too short
-        if (truncated.length < col.minWidth) {
-            truncated + " ".repeat(col.minWidth - truncated.length)
-        } else {
-            truncated
-        }
-    }
+  return columns.joinToString(separator.toString()) { col ->
+    // pull out any ANSI around the text
+    val prefixAnsi = col.text.extractPrefixAnsi()
+    val suffixAnsi = col.text.extractSuffixAnsi()
+    val core = col.text
+      .removePrefix(prefixAnsi)
+      .removeSuffix(suffixAnsi)
+
+    // work on visible text only
+    val visible = core.stripAnsi()
+
+    // 1) truncate visible if too long
+    val truncatedVisible = if (visible.length > col.maxWidth) {
+      if (col.truncateRight)
+        visible.take(col.maxWidth)
+      else
+        visible.takeLast(col.maxWidth)
+    } else visible
+
+    // 2) pad visible if too short
+    val paddedVisible = if (truncatedVisible.length < col.minWidth) {
+      truncatedVisible + " ".repeat(col.minWidth - truncatedVisible.length)
+    } else truncatedVisible
+
+    // re-insert ANSI around the visible content
+    prefixAnsi + paddedVisible + suffixAnsi
+  }
 }
