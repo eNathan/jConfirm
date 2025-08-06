@@ -1,4 +1,4 @@
-import java.text.BreakIterator
+import java.util.regex.Pattern
 
 data class Column(
     val text: String,
@@ -7,73 +7,44 @@ data class Column(
     val truncateRight: Boolean
 )
 
-private val ANSI_REGEX = """\u001B\[[;0-9]*m""".toRegex()
-
-private fun String.stripAnsi() = replace(ANSI_REGEX, "")
-
-/** 
- * Splits a string into user‐perceived characters (grapheme clusters). 
- */
-private fun String.graphemeClusters(): List<String> {
-  val it = BreakIterator.getCharacterInstance()
-  it.setText(this)
-  val clusters = mutableListOf<String>()
-  var start = it.first()
-  var end = it.next()
-  while (end != BreakIterator.DONE) {
-    clusters += substring(start, end)
-    start = end
-    end = it.next()
-  }
-  return clusters
-}
+private val ANSI_REGEX = "\u001B\\[[;0-9]*m"
+private val ANSI_WRAP = Pattern.compile("^(?:$ANSI_REGEX)+|(?:$ANSI_REGEX)+$")
 
 fun row(separator: Char = '\t', vararg columns: Column): String {
   return columns.joinToString(separator.toString()) { col ->
-    // 1) Strip ANSI for sizing, but remember where they were
-    val parts = ANSI_REGEX.split(col.text)
-    val codes = ANSI_REGEX.findAll(col.text).map { it.value }.toList()
-    // Rebuild alternating segments: code/text/code/text...
-    val segments = mutableListOf<Pair<Boolean,String>>()
-    var ti = 0
-    var ci = 0
-    // start with text if text segment exists
-    if (parts.isNotEmpty()) {
-      segments += false to parts[0]
-      ti = 1
-    }
-    while (ci < codes.size || ti < parts.size) {
-      if (ci < codes.size) {
-        segments += true to codes[ci++]
-      }
-      if (ti < parts.size) {
-        segments += false to parts[ti++]
-      }
-    }
-    // Extract all visible text, split into graphemes
-    val visible = segments.filter { !it.first }.joinToString("") { it.second }
-    val graphemes = visible.graphemeClusters()
+    val t = col.text
 
-    // 2) Truncate graphemes if needed
-    val truncated = if (graphemes.size > col.maxWidth) {
-      if (col.truncateRight) graphemes.take(col.maxWidth)
-      else                  graphemes.takeLast(col.maxWidth)
+    // 1) pull off any leading/trailing ANSI
+    val matcher = ANSI_WRAP.matcher(t)
+    var core = t
+    val codes = mutableListOf<String>()
+    while (matcher.find()) {
+      codes += matcher.group()
+    }
+    codes.forEach { core = core.removePrefix(it).removeSuffix(it) }
+
+    // 2) truncate by code-points
+    val cpCount = core.codePointCount(0, core.length)
+    val truncated = if (cpCount > col.maxWidth) {
+      if (col.truncateRight) {
+        val end = core.offsetByCodePoints(0, col.maxWidth)
+        core.substring(0, end)
+      } else {
+        val start = core.offsetByCodePoints(0, cpCount - col.maxWidth)
+        core.substring(start)
+      }
     } else {
-      graphemes
+      core
     }
 
-    // 3) Pad with spaces if too short
-    val padded = mutableListOf<String>().apply {
-      addAll(truncated)
-      repeat(col.minWidth - truncated.size.coerceAtLeast(0)) { add(" ") }
+    // 3) pad to minWidth
+    val padded = if (truncated.codePointCount(0, truncated.length) < col.minWidth) {
+      truncated + " ".repeat(col.minWidth - truncated.codePointCount(0, truncated.length))
+    } else {
+      truncated
     }
 
-    // 4) Now re‐interleave ANSI codes around the padded text.
-    //    Simplest is: emit all leading codes, then our padded text, then all trailing codes.
-    //    (This assumes you only used ANSI at the very start or end of col.text.)
-    val leadingCodes = col.text.takeWhile { it == '\u001B' || it == '[' || it.isDigit() || it == ';' || it == 'm' }
-    val trailingCodes = col.text.takeLastWhile { it == 'm' || it == '[' || it == ';' || it.isDigit() || it == '\u001B' }
-
-    leadingCodes + padded.joinToString("") + trailingCodes
+    // 4) re-attach all your ANSI wraps (in original order)
+    codes.joinToString("") + padded + codes.asReversed().joinToString("")
   }
 }
