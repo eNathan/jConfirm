@@ -1,50 +1,41 @@
-import java.util.regex.Pattern
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.channels.ReceiveChannel
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.produceIn
 
-data class Column(
-    val text: String,
-    val minWidth: Int,
-    val maxWidth: Int,
-    val truncateRight: Boolean
-)
+/**
+ * Similar to zip, but continues after one flow completes, emitting nulls for the shorter one.
+ * Completes when both flows complete. Never emits a pair where both are null.
+ */
+@Suppress("UNCHECKED_CAST") // nullable padding is intentional
+inline fun <T1, T2, R> Flow<T1>.zipFull(
+    other: Flow<T2>,
+    crossinline transform: suspend (T1?, T2?) -> R
+): Flow<R> = flow {
+    coroutineScope {
+        val c1: ReceiveChannel<T1> = this@zipFull.produceIn(this)
+        val c2: ReceiveChannel<T2> = other.produceIn(this)
+        try {
+            while (true) {
+                val r1 = c1.receiveCatching()
+                val r2 = c2.receiveCatching()
 
-private val ANSI_REGEX = "\u001B\\[[;0-9]*m"
-private val ANSI_WRAP = Pattern.compile("^(?:$ANSI_REGEX)+|(?:$ANSI_REGEX)+$")
+                // Propagate upstream exceptions immediately.
+                r1.exceptionOrNull()?.let { throw it }
+                r2.exceptionOrNull()?.let { throw it }
 
-fun row(separator: Char = '\t', vararg columns: Column): String {
-  return columns.joinToString(separator.toString()) { col ->
-    val t = col.text
+                val v1: T1? = r1.getOrNull()
+                val v2: T2? = r2.getOrNull()
 
-    // 1) pull off any leading/trailing ANSI
-    val matcher = ANSI_WRAP.matcher(t)
-    var core = t
-    val codes = mutableListOf<String>()
-    while (matcher.find()) {
-      codes += matcher.group()
+                // If both are done, terminate without emitting a (null, null).
+                if (v1 == null && v2 == null) break
+
+                emit(transform(v1, v2))
+            }
+        } finally {
+            c1.cancel()
+            c2.cancel()
+        }
     }
-    codes.forEach { core = core.removePrefix(it).removeSuffix(it) }
-
-    // 2) truncate by code-points
-    val cpCount = core.codePointCount(0, core.length)
-    val truncated = if (cpCount > col.maxWidth) {
-      if (col.truncateRight) {
-        val end = core.offsetByCodePoints(0, col.maxWidth)
-        core.substring(0, end)
-      } else {
-        val start = core.offsetByCodePoints(0, cpCount - col.maxWidth)
-        core.substring(start)
-      }
-    } else {
-      core
-    }
-
-    // 3) pad to minWidth
-    val padded = if (truncated.codePointCount(0, truncated.length) < col.minWidth) {
-      truncated + " ".repeat(col.minWidth - truncated.codePointCount(0, truncated.length))
-    } else {
-      truncated
-    }
-
-    // 4) re-attach all your ANSI wraps (in original order)
-    codes.joinToString("") + padded + codes.asReversed().joinToString("")
-  }
 }
