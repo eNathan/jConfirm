@@ -1,41 +1,58 @@
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.channels.ReceiveChannel
+import kotlinx.coroutines.CoroutineStart
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.produceIn
+import kotlinx.coroutines.flow.channelFlow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.consumeAsFlow
 
 /**
- * Similar to zip, but continues after one flow completes, emitting nulls for the shorter one.
- * Completes when both flows complete. Never emits a pair where both are null.
+ * Map an input flow to an output flow using a sub-mapper function
+ * which will be ran in separate coroutines, with multiple instances
+ * of the inner mapper running in parallel.
  */
-@Suppress("UNCHECKED_CAST") // nullable padding is intentional
-inline fun <T1, T2, R> Flow<T1>.zipFull(
-    other: Flow<T2>,
-    crossinline transform: suspend (T1?, T2?) -> R
-): Flow<R> = flow {
-    coroutineScope {
-        val c1: ReceiveChannel<T1> = this@zipFull.produceIn(this)
-        val c2: ReceiveChannel<T2> = other.produceIn(this)
+fun <T, R> Flow<T>.parallelFlowMap(
+    parallelism: Int,
+    mapper: suspend Flow<T>.(Int) -> Flow<R>
+): Flow<R> = channelFlow {
+    require(parallelism > 0) { "parallelism must be > 0" }
+
+    // Per-worker SPSC channels (far less contention than MPMC).
+    // Tune capacity if you need more smoothing; 64 is a good default.
+    val workerCapacity = Channel.BUFFERED
+    val workers = Array(parallelism) { Channel<T>(workerCapacity) }
+
+    // Upstream -> round-robin distributor (single sender, no contention).
+    val distributor = launch(start = CoroutineStart.UNDISPATCHED) {
+        var i = 0
         try {
-            while (true) {
-                val r1 = c1.receiveCatching()
-                val r2 = c2.receiveCatching()
-
-                // Propagate upstream exceptions immediately.
-                r1.exceptionOrNull()?.let { throw it }
-                r2.exceptionOrNull()?.let { throw it }
-
-                val v1: T1? = r1.getOrNull()
-                val v2: T2? = r2.getOrNull()
-
-                // If both are done, terminate without emitting a (null, null).
-                if (v1 == null && v2 == null) break
-
-                emit(transform(v1, v2))
+            collect { value ->
+                val ch = workers[i]
+                // Fast path: non-suspending trySend; fallback to send if full.
+                if (ch.trySend(value).isFailure) ch.send(value)
+                i++
+                if (i == parallelism) i = 0
             }
         } finally {
-            c1.cancel()
-            c2.cancel()
+            // Close all worker inputs when upstream completes or fails.
+            workers.forEach { it.close() }
         }
     }
+
+    // Start workers: each consumes its own channel and applies the mapper once.
+    repeat(parallelism) { idx ->
+        launch {
+            // Build the mapped flow ONCE per worker over its input stream.
+            val outFlow = workers[idx].consumeAsFlow().mapper(idx)
+            // Emit downstream; use trySend fast path to reduce suspends.
+            outFlow.collect { item ->
+                val r = trySend(item)
+                if (r.isFailure) send(item)
+            }
+        }
+    }
+
+    // Ensure distributor finishes; channelFlow will await all children anyway.
+    distributor.join()
 }
+****
