@@ -1,58 +1,78 @@
-import kotlinx.coroutines.CoroutineStart
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.channelFlow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.consumeAsFlow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.coroutineScope
 
 /**
- * Map an input flow to an output flow using a sub-mapper function
- * which will be ran in separate coroutines, with multiple instances
- * of the inner mapper running in parallel.
+ * Returns a flow that emits elements from this flow that are not present in the other flow.
+ * Both flows must be sorted by [comparator]. Extra elements in [other] are ignored.
  */
-fun <T, R> Flow<T>.parallelFlowMap(
-    parallelism: Int,
-    mapper: suspend Flow<T>.(Int) -> Flow<R>
-): Flow<R> = channelFlow {
-    require(parallelism > 0) { "parallelism must be > 0" }
+fun <T> Flow<T>.missing(other: Flow<T>, comparator: Comparator<T>): Flow<T> = flow {
+    coroutineScope {
+        // Feed each input flow into its own channel so we can "merge-diff" them.
+        val leftCh = Channel<T>(capacity = Channel.BUFFERED)
+        val rightCh = Channel<T>(capacity = Channel.BUFFERED)
 
-    // Per-worker SPSC channels (far less contention than MPMC).
-    // Tune capacity if you need more smoothing; 64 is a good default.
-    val workerCapacity = Channel.BUFFERED
-    val workers = Array(parallelism) { Channel<T>(workerCapacity) }
-
-    // Upstream -> round-robin distributor (single sender, no contention).
-    val distributor = launch(start = CoroutineStart.UNDISPATCHED) {
-        var i = 0
-        try {
-            collect { value ->
-                val ch = workers[i]
-                // Fast path: non-suspending trySend; fallback to send if full.
-                if (ch.trySend(value).isFailure) ch.send(value)
-                i++
-                if (i == parallelism) i = 0
-            }
-        } finally {
-            // Close all worker inputs when upstream completes or fails.
-            workers.forEach { it.close() }
+        // Start collectors
+        val leftJob = launch {
+            try { this@missing.collect { leftCh.send(it) } }
+            finally { leftCh.close() }
         }
-    }
+        val rightJob = launch {
+            try { other.collect { rightCh.send(it) } }
+            finally { rightCh.close() }
+        }
 
-    // Start workers: each consumes its own channel and applies the mapper once.
-    repeat(parallelism) { idx ->
-        launch {
-            // Build the mapped flow ONCE per worker over its input stream.
-            val outFlow = workers[idx].consumeAsFlow().mapper(idx)
-            // Emit downstream; use trySend fast path to reduce suspends.
-            outFlow.collect { item ->
-                val r = trySend(item)
-                if (r.isFailure) send(item)
+        suspend fun <E> ReceiveChannel<E>.recvOrNull(): E? =
+            receiveCatching().getOrNull()
+
+        var leftItem: T? = null
+        var rightItem: T? = null
+        var rightClosed = false
+
+        while (true) {
+            if (leftItem == null) {
+                leftItem = leftCh.recvOrNull()
+                if (leftItem == null) break // left exhausted → we're done
+            }
+            if (!rightClosed && rightItem == null) {
+                rightItem = rightCh.recvOrNull()
+                if (rightItem == null) {
+                    rightClosed = true
+                }
+            }
+
+            if (rightClosed) {
+                // No more items on the right: everything left on the left is "missing".
+                emit(leftItem!!)
+                leftItem = null
+                continue
+            }
+
+            // Compare current heads
+            val cmp = comparator.compare(leftItem!!, rightItem!!)
+            when {
+                cmp < 0 -> {
+                    // left < right → left element doesn't exist on right
+                    emit(leftItem!!)
+                    leftItem = null
+                }
+                cmp == 0 -> {
+                    // Match → consume one from each, emit nothing
+                    leftItem = null
+                    rightItem = null
+                }
+                else -> {
+                    // right < left → advance right (ignore extras on right)
+                    rightItem = null
+                }
             }
         }
-    }
 
-    // Ensure distributor finishes; channelFlow will await all children anyway.
-    distributor.join()
+        // Ensure children are cancelled if downstream cancels early
+        leftJob.cancel()
+        rightJob.cancel()
+    }
 }
-****
